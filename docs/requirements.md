@@ -7,10 +7,18 @@ check.webring.ooo is part of the webring.ooo project and it's made just for fun,
 - things are displayed in a table. search and check is the same box above the table - if there are no results in the cached firstnames thing, there is a button to search
 - list of first names is stashed as names.csv. it contains a 100 examples for now, will be replaced with a longer list at some point
 
-### Stack 
+### Tech stack 
 Option A
 - traditional backend and API using FastAPI
 - Svelte frontend
+- `uv` and `ruff` for Python
+- `prettier` for Svelte
 
 Option B
 - React + NextJS
+
+
+### Tool stack
+- Cursor with Claude 4 at the time of writing
+- Taskmaster AI
+- Puppeteer MCP
