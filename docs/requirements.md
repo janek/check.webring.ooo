@@ -13,9 +13,6 @@ check.webring.ooo is part of the webring.ooo project and it's made just for fun,
 - `uv` and `ruff` for Python development
 - `prettier` for Svelte formatting
 
-*See ADR-001 for the full rationale behind this tech stack selection.*
-
-
 ### Tool stack
 - Cursor with Claude 4 at the time of writing
 - Taskmaster AI
