@@ -18,3 +18,6 @@ check.webring.ooo is part of the webring.ooo project and it's made just for fun,
 - Taskmaster AI
 - Puppeteer MCP
 - Netlify or Vercel for hosting, or the new hip one from Code Uni
+
+### Random notes
+- will consider 
