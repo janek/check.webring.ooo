@@ -8,17 +8,16 @@ check.webring.ooo is part of the webring.ooo project and it's made just for fun,
 - list of first names is stashed as names.csv. it contains a 100 examples for now, will be replaced with a longer list at some point
 
 ### Tech stack 
-Option A
-- traditional backend and API using FastAPI
-- Svelte frontend
-- `uv` and `ruff` for Python
-- `prettier` for Svelte
+- FastAPI backend with async support for domain checking
+- Svelte frontend for clean, lightweight UI
+- `uv` and `ruff` for Python development
+- `prettier` for Svelte formatting
 
-Option B
-- React + NextJS
+*See ADR-001 for the full rationale behind this tech stack selection.*
 
 
 ### Tool stack
 - Cursor with Claude 4 at the time of writing
 - Taskmaster AI
 - Puppeteer MCP
+- Netlify or Vercel for hosting, or the new hip one from Code Uni
