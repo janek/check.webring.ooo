@@ -5,15 +5,15 @@ dataset = nd.NameDataset()
 print("NameDataset loaded successfully!")
 
 print("\n=== AVAILABLE METHODS ===")
-methods = [method for method in dir(dataset) if not method.startswith('_')]
+methods = [method for method in dir(dataset) if not method.startswith("_")]
 print("Available methods:", methods)
 
 print("\n=== SEARCH TEST ===")
-result = dataset.search('Alice')
+result = dataset.search("Alice")
 print("Search result for 'Alice':", result)
 
 print("\n=== SEARCH TEST 2 ===")
-result = dataset.search('Philippe')
+result = dataset.search("Philippe")
 print("Search result for 'Philippe':", result)
 
 print("\n=== COUNTRY CODES ===")
@@ -32,8 +32,6 @@ if dataset.first_names:
     print("First 20 names:", sample_names)
 
 print("\n=== SAMPLE FIRST NAME DATA ===")
-if dataset.first_names and 'Alice' in dataset.first_names:
-    alice_data = dataset.first_names['Alice']
+if dataset.first_names and "Alice" in dataset.first_names:
+    alice_data = dataset.first_names["Alice"]
     print("Alice data:", alice_data)
-
- 
