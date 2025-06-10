@@ -1,23 +1,41 @@
-import csv
 import random
-from pathlib import Path
 
 from fastapi import FastAPI, Query
 
+# External library (large dataset)
+from names_dataset import NameDataset
+
 app = FastAPI()
 
+# ---------------------------------------------------------------------------
+# NameDataset initialisation (heavy) – done once at startup
+# ---------------------------------------------------------------------------
 
-def load_names() -> list[dict[str, str]]:
-    """Load names from CSV file"""
-    csv_path = Path(__file__).parent / "names.csv"
-    names = []
+# Lazy singleton so reloads do not re-initialise needlessly
+_ND: NameDataset | None = None
 
-    with open(csv_path) as file:
-        reader = csv.DictReader(file)
-        for row in reader:
-            names.append(row)
 
-    return names
+def get_dataset() -> NameDataset:
+    """Initialise NameDataset once and cache it."""
+    global _ND
+    if _ND is None:
+        _ND = NameDataset()  # type: ignore
+    return _ND
+
+
+# Utility to flatten the nested dict from get_top_names into a list
+def flatten_top_names(
+    top_names: dict[str, dict[str, list[str]]], limit: int
+) -> list[str]:
+    collected: set[str] = set()
+    # the dict structure is country -> gender -> [names]
+    for gender_map in top_names.values():
+        for names in gender_map.values():
+            for name in names:
+                if len(collected) >= limit:
+                    return list(collected)
+                collected.add(name)
+    return list(collected)
 
 
 @app.get("/")
@@ -27,14 +45,19 @@ async def hello_world():
 
 @app.get("/names")
 async def get_names(
-    count: int | None = Query(None, description="Number of random names to return"),
+    count: int = Query(
+        30, ge=1, le=10000, description="Number of popular names to return"
+    ),
 ):
-    """Get names from the CSV, optionally limited to a random sample"""
-    names = load_names()
+    """Return a flat list of popular first names sampled from NameDataset."""
+    dataset = get_dataset()
+    # Request a bit more than needed in case of duplicates
+    fetch_n = min(max(count * 3, 100), 5000)
+    top_dict = dataset.get_top_names(n=fetch_n, use_first_names=True)
+    flat_names = flatten_top_names(top_dict, limit=count * 2)
 
-    if count is not None:
-        # Return random sample if count specified
-        sample_size = min(count, len(names))
-        names = random.sample(names, sample_size)
+    # Finally sample down to requested count (random to add variety)
+    if len(flat_names) > count:
+        flat_names = random.sample(flat_names, count)
 
-    return {"names": names, "total": len(names)}
+    return {"names": flat_names, "returned": len(flat_names)}
