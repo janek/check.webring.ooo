@@ -15,9 +15,10 @@ check.webring.ooo is part of the webring.ooo project and it's made just for fun,
 
 ### Tool stack
 - Cursor with Claude 4 at the time of writing
-- Taskmaster AI
-- Puppeteer MCP
+- Taskmaster AI?
+- Puppeteer MCP?
 - Netlify or Vercel for hosting, or the new hip one from Code Uni
 
 ### Random notes
 - will consider 
+- potential funny animation: names appearing from afar and entering the picture. random selection of names
