@@ -1,0 +1,18 @@
+services:
+  backend:
+    container_name: check-webring-backend
+    build: .
+    ports:
+      - "8000:8000"
+    restart: unless-stopped
+  redis:
+    image: redis:7-alpine
+    container_name: redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-data:/data
+    restart: unless-stopped
+
+volumes:
+  redis-data: 
