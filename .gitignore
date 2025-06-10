@@ -58,4 +58,12 @@ logs/
 
 # Temporary files
 *.tmp
-*.temp 
+*.temp
+
+# Frontend (Node.js/Svelte)
+frontend/node_modules/
+frontend/dist/
+frontend/.svelte-kit/
+frontend/package-lock.json
+frontend/yarn.lock
+frontend/pnpm-lock.yaml 

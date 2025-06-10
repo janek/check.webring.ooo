@@ -1,0 +1,18 @@
+{
+  "name": "webring-checker-frontend",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "devDependencies": {
+    "@sveltejs/vite-plugin-svelte": "^3.0.0",
+    "svelte": "^4.2.7",
+    "vite": "^5.0.8",
+    "prettier": "^3.0.0",
+    "prettier-plugin-svelte": "^3.0.0"
+  }
+}
