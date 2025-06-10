@@ -7,7 +7,7 @@ app = FastAPI()
 
 def load_names() -> List[Dict[str, str]]:
     """Load names from CSV file"""
-    csv_path = Path(__file__).parent / "data" / "names.csv"
+    csv_path = Path(__file__).parent / "names.csv"
     names = []
     
     with open(csv_path, 'r') as file:
