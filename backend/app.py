@@ -1,7 +1,8 @@
 import csv
+import random
 from pathlib import Path
-from typing import List, Dict
-from fastapi import FastAPI
+from typing import List, Dict, Optional
+from fastapi import FastAPI, Query
 
 app = FastAPI()
 
@@ -22,7 +23,15 @@ async def hello_world():
     return {"message": "Hello World!"}
 
 @app.get("/names")
-async def get_names():
-    """Get all names from the CSV"""
+async def get_names(count: Optional[int] = Query(None, description="Number of random names to return")):
+    """Get names from the CSV, optionally limited to a random sample"""
     names = load_names()
-    return {"names": names} 
+    
+    if count is not None:
+        # Return random sample if count specified
+        sample_size = min(count, len(names))
+        names = random.sample(names, sample_size)
+    
+    return {"names": names, "total": len(names)}
+
+ 
