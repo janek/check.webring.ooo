@@ -26,13 +26,13 @@ dev: ## Start Redis, backend (reload) & SvelteKit frontend
 	docker compose up -d redis
 	# Start backend in background
 	(cd backend && uv run uvicorn app:app --reload --host 0.0.0.0 --port 8000 &)
-	# Start frontend in background
-	cd frontend && bun run dev
 	# Open docs and frontend in browser (macOS `open`)
 	open http://localhost:8000/docs >/dev/null 2>&1 || true
 	open http://localhost:5173 >/dev/null 2>&1 || true
 	# Open Medis (macOS GUI Redis browser)
 	open /Applications/Medis.app 
+	# Start frontend in background
+	cd frontend && bun run dev
 
 run-api: dev ## Alias for dev
 
