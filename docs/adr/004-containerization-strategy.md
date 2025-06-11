@@ -26,7 +26,15 @@ We will:
 2. **Create a `.dockerignore`** to keep the build context minimal (skips Git, caches, IDE folders).
 3. **Document usage** (build & run) in the top-level `README.md`.
 
-No `docker-compose.yml` yet – that will arrive once Redis is introduced (see forthcoming ADR-005).
+A `docker-compose.yml` now orchestrates the **backend** and **Redis** containers; the frontend may join later (see Addendum below).
+
+### Addendum (11.06.25)
+A `docker-compose.yml` is now present and orchestrates the **backend** and **Redis** services. The Svelte **frontend** remains outside Docker during day-to-day development for faster hot-reloads. Two deployment paths are being evaluated:
+
+1. **Option A** – separate `frontend` container serving the static bundle via `nginx`.
+2. **Option B** – bake the built static assets into the existing backend image and let FastAPI serve them.
+
+No change to the original decision is required today; containerising the frontend will be revisited when the project approaches production deployment.
 
 ## Consequences
 
