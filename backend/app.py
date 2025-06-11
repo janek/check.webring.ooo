@@ -1,11 +1,30 @@
+import asyncio
 import random
+import socket
+from contextlib import asynccontextmanager
+from datetime import timedelta
 
-from fastapi import FastAPI, Query
+from fastapi import Depends, FastAPI, HTTPException, Query
 
 # External library (large dataset)
 from names_dataset import NameDataset
 
-app = FastAPI()
+from redis_client import close_redis, get_redis
+
+# ---------------------------------------------------------------------------
+# Lifespan handler for startup/shutdown
+# ---------------------------------------------------------------------------
+
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    # Startup: nothing for now (lazy initialisation elsewhere)
+    yield
+    # Shutdown
+    await close_redis()
+
+
+app = FastAPI(lifespan=lifespan)
 
 # ---------------------------------------------------------------------------
 # NameDataset initialisation (heavy) – done once at startup
@@ -61,3 +80,54 @@ async def get_names(
         flat_names = random.sample(flat_names, count)
 
     return {"names": flat_names, "returned": len(flat_names)}
+
+
+# ---------------------------------------------------------------------------
+# Domain availability checker
+# ---------------------------------------------------------------------------
+
+
+async def is_domain_available(domain: str) -> bool:
+    """Return True if the domain does NOT resolve (naive availability check)."""
+    loop = asyncio.get_running_loop()
+    try:
+        # getaddrinfo returns at least one record if DNS resolves
+        await loop.getaddrinfo(domain, None)
+        return False  # resolves → taken
+    except socket.gaierror:
+        return True  # DNS failed → likely available
+
+
+# ---------------------------------------------------------------------------
+# Endpoint: /check/{domain}
+# ---------------------------------------------------------------------------
+
+
+@app.get("/check/{domain}")
+async def check_domain(domain: str, redis=Depends(get_redis)):
+    # Normalise
+    domain_lower = domain.lower()
+
+    # Quick sanity: must contain a dot
+    if "." not in domain_lower:
+        raise HTTPException(status_code=400, detail="invalid domain")
+
+    cached = await redis.get(domain_lower)
+    if cached is not None:
+        return {
+            "domain": domain_lower,
+            "available": cached == "free",
+            "cached": True,
+        }
+
+    available = await is_domain_available(domain_lower)
+
+    # Cache policy: available domains checked more frequently
+    ttl = (
+        int(timedelta(hours=1).total_seconds())
+        if available
+        else int(timedelta(days=7).total_seconds())
+    )
+    await redis.set(domain_lower, "free" if available else "taken", ex=ttl)
+
+    return {"domain": domain_lower, "available": available, "cached": False}

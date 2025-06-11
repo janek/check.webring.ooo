@@ -14,7 +14,8 @@ WORKDIR /app
 RUN pip install --no-cache-dir \
     fastapi>=0.115.0 \
     uvicorn[standard]>=0.34.0 \
-    names-dataset>=3.3.0
+    names-dataset>=3.3.0 \
+    redis>=5.0.4
 
 # ---------------------------------------------------------------------------
 # Copy application source
