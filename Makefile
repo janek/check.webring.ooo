@@ -1,4 +1,4 @@
-.PHONY: help install format lint lint-fix check-all test dev run-api docker-build docker-up docker-down clean
+.PHONY: help install format lint lint-fix check-all test dev run-api docker-build docker-up docker-down clean refresh-cache refresh-cache-incremental
 
 # === Dependency management ===
 install: ## Sync Python dependencies with uv
@@ -45,6 +45,13 @@ docker-up: ## Start stack (backend + redis) in background
 
 docker-down: ## Stop stack and remove containers
 	docker compose down
+
+# === Cache management ===
+refresh-cache: ## Refresh .ooo domain availability cache (checks all domains)
+	docker compose exec backend python refresh_domain_information.py
+
+refresh-cache-incremental: ## Refresh cache incrementally (skips already cached domains)
+	docker compose exec backend python refresh_domain_information.py --skip-cached
 
 # === Misc ===
 clean: ## Remove Python cache files
