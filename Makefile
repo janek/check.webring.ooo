@@ -1,4 +1,4 @@
-.PHONY: help install format lint lint-fix check-all test dev run-api docker-build docker-up docker-down clean refresh-cache refresh-cache-incremental
+.PHONY: help install format lint lint-fix check-all test dev run-api docker-build docker-up docker-down clean refresh-cache refresh-cache-incremental export-cache
 
 # === Dependency management ===
 install: ## Sync Python dependencies with uv
@@ -52,6 +52,9 @@ refresh-cache: ## Refresh .ooo domain availability cache (checks all domains)
 
 refresh-cache-incremental: ## Refresh cache incrementally (skips already cached domains)
 	docker compose exec backend python refresh_domain_information.py --skip-cached
+
+export-cache: ## Export Redis cache to CSV file (data/cached_domains.csv)
+	docker compose exec backend python export_cache_to_csv.py
 
 # === Misc ===
 clean: ## Remove Python cache files
