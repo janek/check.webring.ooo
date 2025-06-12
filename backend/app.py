@@ -122,12 +122,8 @@ async def check_domain(domain: str, redis=Depends(get_redis)):
 
     available = await is_domain_available(domain_lower)
 
-    # Cache policy: available domains checked more frequently
-    ttl = (
-        int(timedelta(hours=1).total_seconds())
-        if available
-        else int(timedelta(days=7).total_seconds())
-    )
+    # Cache policy: 7 days for both available and taken domains
+    ttl = int(timedelta(days=7).total_seconds())
     await redis.set(domain_lower, "free" if available else "taken", ex=ttl)
 
     return {"domain": domain_lower, "available": available, "cached": False}

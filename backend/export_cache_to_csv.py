@@ -1,13 +1,18 @@
 import argparse
 import asyncio
 import csv
+from datetime import datetime
 from pathlib import Path
 
 from redis_client import close_redis, get_redis
 
 
-async def export_cache_to_csv(output_path="data/cached_domains.csv"):
+async def export_cache_to_csv(output_path=None):
     """Export Redis domain cache to CSV file."""
+    if output_path is None:
+        timestamp = datetime.now().strftime("%Y-%m-%d-%H-%M")
+        output_path = f"data/cached_domains_{timestamp}.csv"
+
     redis = await get_redis()
 
     # Get all .ooo domain keys from Redis
@@ -72,8 +77,8 @@ async def main():
     parser.add_argument(
         "-o",
         "--output",
-        default="data/cached_domains.csv",
-        help="Output CSV file path (default: data/cached_domains.csv)",
+        default=None,
+        help="Output CSV file path (default: data/cached_domains_YYYY-MM-DD-HH-MM.csv)",
     )
     args = parser.parse_args()
 
