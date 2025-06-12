@@ -1,4 +1,7 @@
-.PHONY: help install format lint lint-fix check-all test dev run-api docker-build docker-up docker-down clean refresh-cache refresh-cache-incremental export-cache
+.PHONY: help install format lint lint-fix check-all test dev run-api docker-build docker-up docker-down clean refresh-cache refresh-cache-incremental export-cache test-domains test-refresh-2k
+
+help: ## Show this help
+	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-15s\033[0m %s\n", $$1, $$2}' 
 
 # === Dependency management ===
 install: ## Sync Python dependencies with uv
@@ -56,10 +59,10 @@ refresh-cache-incremental: ## Refresh cache incrementally (skips already cached 
 export-cache: ## Export Redis cache to CSV file (data/cached_domains.csv)
 	docker compose exec backend python export_cache_to_csv.py
 
+test-domains: ## Test domain availability checking with known domains
+	docker compose exec backend python test_domains.py
+
 # === Misc ===
 clean: ## Remove Python cache files
 	find . -type d -name "__pycache__" -exec rm -rf {} +
-	find . -type f -name "*.pyc" -delete
-
-help: ## Show this help
-	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-15s\033[0m %s\n", $$1, $$2}' 
+	find . -type f -name "*.pyc" -delete 
