@@ -47,7 +47,7 @@
 			domain.domain.toLowerCase().includes(searchTerm.toLowerCase()) ||
 			domain.status.toLowerCase().includes(searchTerm.toLowerCase())
 		);
-		displayedDomains = filtered.slice(0, 100); // Limit to 100 results for performance
+		displayedDomains = filtered.slice(0, 50); // Limit to 50 results for performance
 	}
 
 	// Handle search input
@@ -92,8 +92,8 @@
 		<!-- Results count -->
 		<div class="mb-3 text-center text-sm text-gray-500 sm:mb-4">
 			{#if searchTerm.trim()}
-				{#if displayedDomains.length === 100}
-					showing first 100 results for "{searchTerm}"
+				{#if displayedDomains.length === 50}
+					showing first 50 results for "{searchTerm}"
 				{:else}
 					found {displayedDomains.length.toLocaleString()} result{displayedDomains.length !== 1 ? 's' : ''} for "{searchTerm}"
 				{/if}
