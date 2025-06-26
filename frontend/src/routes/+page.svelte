@@ -77,30 +77,33 @@
 	<meta name="description" content="Search .ooo domain availability" />
 </svelte:head>
 
-<div class="container mx-auto px-3 py-6 max-w-xl sm:px-4 sm:py-8">
+<div class="container mx-auto px-3 py-6 max-w-md sm:px-4 sm:py-8">
 	<!-- Header -->
 	<div class="mb-6 text-center sm:mb-8">
 		<h1 class="text-2xl font-bold text-gray-900 mb-2 sm:text-3xl md:text-4xl">
 			check.webring.ooo
 		</h1>
 		<p class="text-gray-600 text-sm md:text-base">
-			Check if your "first name".ooo is available and join the <a href="https://webring.ooo" class="text-blue-500 hover:text-blue-600">webring</a>!
+			Check if your name.ooo is available and join the <a href="https://webring.ooo" class="text-blue-500 hover:text-blue-600">webring</a>!
 		</p>
 	</div>
 
 	{#if !isLoading}
 		<!-- Results count -->
 		<div class="mb-3 text-center text-sm text-gray-500 sm:mb-4">
-			{displayedDomains.length.toLocaleString()} domain{displayedDomains.length !== 1 ? 's' : ''}
 			{#if searchTerm.trim()}
-				found
+				{#if displayedDomains.length === 100}
+					showing first 100 results for "{searchTerm}"
+				{:else}
+					found {displayedDomains.length.toLocaleString()} result{displayedDomains.length !== 1 ? 's' : ''} for "{searchTerm}"
+				{/if}
 			{:else}
-				shown
+				showing 50 random domains
 			{/if}
 		</div>
 
 		<!-- Search and Table Container -->
-		<div class="mx-auto" style="width: fit-content;">
+		<div class="mx-auto">
 			<div class="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
 				<!-- Search -->
 				<div class="p-4 border-b border-gray-200">
