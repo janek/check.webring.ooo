@@ -12,6 +12,10 @@
 	let searchInput;
 	let limit = 10; // Configurable limit for both random and search results
 
+	// Added metrics for taken domains
+	let takenCount = 0;
+	let takenPercentage = 0;
+
 	// Parse CSV data
 	function parseCSV(csv) {
 		const lines = csv.trim().split('\n');
@@ -76,6 +80,9 @@
 	// Initialize on mount
 	onMount(() => {
 		domains = parseCSV(domainsCSV);
+		// Calculate taken domains statistics
+		takenCount = domains.filter(d => d.status === 'taken').length;
+		takenPercentage = (takenCount / domains.length) * 100;
 		displayedDomains = getRandomDomains(domains);
 		isLoading = false;
 	});
@@ -200,7 +207,7 @@
 
 			<!-- Footer info -->
 			<div class="mt-6 text-center text-xs text-gray-400 sm:mt-8">
-				<p>{domains.length.toLocaleString()} total domains in registry</p>
+				<p>{domains.length.toLocaleString()} total domains in registry — {takenPercentage.toFixed(1)}% taken</p>
 				<p class="mt-1">Last updated: 2025-06-12</p>
 			</div>
 		{:else}
