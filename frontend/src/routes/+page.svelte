@@ -8,6 +8,7 @@
 	let isSearching = false;
 	let isLoading = true;
 	let searchInput;
+	let limit = 10; // Configurable limit for both random and search results
 
 	// Parse CSV data
 	function parseCSV(csv) {
@@ -29,7 +30,7 @@
 	}
 
 	// Get random sample of domains
-	function getRandomDomains(domainsArray, count = 50) {
+	function getRandomDomains(domainsArray, count = limit) {
 		const shuffled = [...domainsArray].sort(() => 0.5 - Math.random());
 		return shuffled.slice(0, count);
 	}
@@ -47,7 +48,7 @@
 			domain.domain.toLowerCase().includes(searchTerm.toLowerCase()) ||
 			domain.status.toLowerCase().includes(searchTerm.toLowerCase())
 		);
-		displayedDomains = filtered.slice(0, 50); // Limit to 50 results for performance
+		displayedDomains = filtered.slice(0, limit); // Limit results for performance
 	}
 
 	// Handle search input
@@ -92,13 +93,13 @@
 		<!-- Results count -->
 		<div class="mb-3 text-center text-sm text-gray-500 sm:mb-4">
 			{#if searchTerm.trim()}
-				{#if displayedDomains.length === 50}
-					showing first 50 results for "{searchTerm}"
+				{#if displayedDomains.length === limit}
+					showing first {limit} results for "{searchTerm}"
 				{:else}
 					found {displayedDomains.length.toLocaleString()} result{displayedDomains.length !== 1 ? 's' : ''} for "{searchTerm}"
 				{/if}
 			{:else}
-				showing 50 random domains
+				showing {limit} random domains
 			{/if}
 		</div>
 
@@ -169,8 +170,8 @@
 
 				{#if displayedDomains.length === 0}
 					<div class="text-center py-12">
-						<div class="text-gray-400 text-lg mb-2">☰ Nothing found in registry</div>
-						<p class="text-gray-500 text-sm">More complete search available soon</p>
+						<div class="text-gray-400 text-lg mb-2">Nothing found in registry</div>
+						<p class="text-gray-500 text-sm">Search-for-any-domain available soon!</p>
 					</div>
 				{/if}
 			</div>
